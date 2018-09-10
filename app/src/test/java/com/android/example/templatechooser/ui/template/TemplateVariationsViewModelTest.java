@@ -35,7 +35,6 @@ public class TemplateVariationsViewModelTest {
     public InstantTaskExecutorRule instantExecutorRule = new InstantTaskExecutorRule();
 
     private DesignRepository designRepository;
-    private UserRepository userRepository;
     private TemplateVariationsViewModel templateVariationsViewModel;
     
     private static final String ID = "Id";
@@ -43,24 +42,20 @@ public class TemplateVariationsViewModelTest {
     @Before
     public void setup() {
         designRepository = mock(DesignRepository.class);
-        userRepository = mock(UserRepository.class);
-        templateVariationsViewModel = new TemplateVariationsViewModel(designRepository, userRepository);
+        templateVariationsViewModel = new TemplateVariationsViewModel(designRepository);
     }
 
 
     @Test
     public void testNull() {
-        assertThat(templateVariationsViewModel.getRun(), notNullValue());
         assertThat(templateVariationsViewModel.getDesign(), notNullValue());
         verify(designRepository, never()).loadDesign(anyString());
-        verify(userRepository, never()).loadUser(anyString());
     }
 
     @Test
     public void dontFetchWithoutObservers() {
         templateVariationsViewModel.setId(ID);
         verify(designRepository, never()).loadDesign(anyString());
-        verify(userRepository, never()).loadUser(anyString());
     }
 
     @Test
@@ -68,7 +63,7 @@ public class TemplateVariationsViewModelTest {
         ArgumentCaptor<String> id = ArgumentCaptor.forClass(String.class);
 
         templateVariationsViewModel.setId(ID);
-        templateVariationsViewModel.getRun().observeForever(mock(Observer.class));
+        templateVariationsViewModel.getDesign().observeForever(mock(Observer.class));
         verify(designRepository, times(1)).loadDesign(
                 id.capture());
         assertThat(id.getValue(), is(ID));
@@ -77,7 +72,7 @@ public class TemplateVariationsViewModelTest {
     @Test
     public void changeWhileObserved() {
         ArgumentCaptor<String> id = ArgumentCaptor.forClass(String.class);
-        templateVariationsViewModel.getRun().observeForever(mock(Observer.class));
+        templateVariationsViewModel.getDesign().observeForever(mock(Observer.class));
 
         templateVariationsViewModel.setId(ID);
         templateVariationsViewModel.setId("Id2");
@@ -117,8 +112,8 @@ public class TemplateVariationsViewModelTest {
         verifyNoMoreInteractions(designRepository);
         templateVariationsViewModel.setId(ID);
         verifyNoMoreInteractions(designRepository);
-        Observer<Resource<Run>> observer = mock(Observer.class);
-        templateVariationsViewModel.getRun().observeForever(observer);
+        Observer<Resource<Design>> observer = mock(Observer.class);
+        templateVariationsViewModel.getDesign().observeForever(observer);
         verify(designRepository).loadDesign(ID);
         reset(designRepository);
         templateVariationsViewModel.retry();
@@ -128,9 +123,9 @@ public class TemplateVariationsViewModelTest {
     @Test
     public void nullProjectId() {
         templateVariationsViewModel.setId(null);
-        Observer<Resource<Run>> observer1 = mock(Observer.class);
+        Observer<Resource<Design>> observer1 = mock(Observer.class);
         Observer<Resource<Design>> observer2 = mock(Observer.class);
-        templateVariationsViewModel.getRun().observeForever(observer1);
+        templateVariationsViewModel.getDesign().observeForever(observer1);
         templateVariationsViewModel.getDesign().observeForever(observer2);
         verify(observer1).onChanged(null);
         verify(observer2).onChanged(null);

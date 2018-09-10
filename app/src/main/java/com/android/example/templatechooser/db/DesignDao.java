@@ -22,10 +22,10 @@ public abstract class DesignDao {
     public abstract void insert(Design... designs);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    public abstract void insertGames(List<Design> designs);
+    public abstract void insertDesigns(List<Design> designs);
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    public abstract long createGameIfNotExists(Design design);
+    public abstract long createDesignIfNotExists(Design design);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     public abstract void insert(GetDesignIdsResult result);
@@ -33,8 +33,8 @@ public abstract class DesignDao {
     @Query("SELECT * FROM Design WHERE id = :id")
     public abstract LiveData<Design> load(String id);
 
-    @Query("SELECT * FROM Design WHERE id in (:gameIds)")
-    public abstract LiveData<List<Design>> loadById(List<String> gameIds);
+    @Query("SELECT * FROM Design WHERE id in (:designIds)")
+    public abstract LiveData<List<Design>> loadById(List<String> designIds);
 
     @Query("SELECT * FROM GetDesignIdsResult")
     public abstract LiveData<GetDesignIdsResult> findDesignIdsResult();

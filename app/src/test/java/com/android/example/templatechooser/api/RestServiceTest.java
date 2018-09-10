@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 import okhttp3.mockwebserver.MockResponse;
@@ -57,40 +58,32 @@ public class RestServiceTest {
     }
 
     @Test
-    public void getDesigns() throws IOException, InterruptedException {
+    public void getDesignUrls() throws IOException, InterruptedException {
         enqueueResponse("designs.json");
-        GetDesignUrlsResponse designs = getValue(service.getDesignUrls()).body;
+        List<String> designs = getValue(service.getDesignUrls()).body;
 
         RecordedRequest request = mockWebServer.takeRequest();
-        assertThat(request.getPath(), is("/designs?orderby=released&direction=desc&offset=0&max=25"));
+        assertThat(request.getPath(), is("/api/published_designs"));
 
-        assertThat(designs.getDesignUrls().size(), is(20));
+        assertThat(designs, notNullValue());
+        assertThat(designs.size(), is(40));
 
-        Design design = designs.getDesignUrls().get(0);
-        assertThat(design.names.international, is("! Fishy !"));
-        assertThat(design.id, is("k6qqkx6g"));
+        String designUrl = designs.get(0);
+        assertThat(designUrl, is(""));
 
-        Design.Screenshots screenshots = design.assets;
-        assertThat(screenshots, notNullValue());
-        assertThat(screenshots.cover.uri, is("https://www.speedrun.com/themes/fishy/cover-128.png"));
-        assertThat(screenshots.coverLarge.uri, is("https://www.speedrun.com/themes/fishy/cover-256.png"));
-
-        Design design2 = designs.getDesignUrls().get(1);
-        assertThat(design2.names.international, is("&meow; (Meow)"));
+        String designUrl1 = designs.get(1);
+        assertThat(designUrl1, is(""));
     }
 
     @Test
-    public void getRun() throws IOException, InterruptedException {
-        enqueueResponse("runs.json");
-        GetDesignResponse runs = getValue(service.getDesign("k6qqkx6g")).body;
-        assertThat(runs.getDesigns().size(), is(1));
-        Run first = runs.getDesigns().get(0);
-        assertThat(first.id, is("7z0nvdem"));
-        assertThat(first.gameId, is("k6qqkx6g"));
-        assertThat(first.getDateString(), is("2016/05/24"));
-        assertThat(first.players.get(0).id, is("mkj9nw84"));
-        assertThat(first.times.seconds, is(435));
-        assertThat(first.videos.links.get(0).uri, is("https://youtu.be/-Vesbd8uJzE"));
+    public void getDesign() throws IOException, InterruptedException {
+        enqueueResponse("design.json");
+        Design design = getValue(service.getDesign("357")).body;
+        assertThat(design.id, is(357));
+        assertThat(design.name, is("Amsterdam"));
+        assertThat(design.screenshots.medium, is("https://screenshots.dmp.jimdo-server.com?format=medium&ressource=http%3A%2F%2Fapi.dmp.jimdo-server.com%2Fdesigns%2F357%2Fversions%2F2.0.26"));
+        assertThat(design.variations.get(0).name, is("Zuidoost"));
+        assertThat(design.variations.get(0).screenshots.medium, is("https://screenshots.dmp.jimdo-server.com?format=medium&ressource=http%3A%2F%2Fapi.dmp.jimdo-server.com%2Fdesigns%2F357%2Fversions%2F2.0.26&variation=css%2Fvariation-normal-img-subs.min.css"));
     }
 
     private void enqueueResponse(String fileName) throws IOException {

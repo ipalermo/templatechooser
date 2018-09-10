@@ -1,0 +1,80 @@
+{
+    "id": 357,
+    "name": "Amsterdam",
+    "meta": {
+        "version": "2.0.26",
+        "color": "#3689b2",
+        "ownbg.allowed": "yes",
+        "styles.disabled": "m-comment m-product m-formnew",
+        "viewport": "width=device-width, initial-scale=1",
+        "responsive": "true"
+    },
+    "version": "2.0.26",
+    "active": true,
+    "updated_at": "2018-05-22T13:15:48.547Z",
+    "api_version": 2,
+    "uploaded_with": "grunt-template-publisher",
+    "features": [
+        "responsive",
+        "custom-backgrounds",
+        "header-logo",
+        "header-title",
+        "content-narrow",
+        "content-left",
+        "menu-dropdown",
+        "menu-alignable",
+        "sidebar-right",
+        "logo-square",
+        "logo-landscape"
+    ],
+    "html_file": "assets/index.html",
+    "pre_rendered_less_file": "assets/designOptions.css",
+    "less_file": "assets/designOptions.css.less",
+    "manifest_file": "assets/manifest.json",
+    "kickstarter_file": "assets/kickstarter.json",
+    "preview": "https://api.dmp.jimdo-server.com/designs/357/versions/2.0.26/preview",
+    "screenshots": {
+        "iphone": "https://screenshots.dmp.jimdo-server.com?format=iphone&ressource=http%3A%2F%2Fapi.dmp.jimdo-server.com%2Fdesigns%2F357%2Fversions%2F2.0.26",
+        "ipad": "https://screenshots.dmp.jimdo-server.com?format=ipad&ressource=http%3A%2F%2Fapi.dmp.jimdo-server.com%2Fdesigns%2F357%2Fversions%2F2.0.26",
+        "medium": "https://screenshots.dmp.jimdo-server.com?format=medium&ressource=http%3A%2F%2Fapi.dmp.jimdo-server.com%2Fdesigns%2F357%2Fversions%2F2.0.26",
+        "small": "https://screenshots.dmp.jimdo-server.com?format=small&ressource=http%3A%2F%2Fapi.dmp.jimdo-server.com%2Fdesigns%2F357%2Fversions%2F2.0.26",
+        "preview": "https://screenshots.dmp.jimdo-server.com?format=preview&ressource=http%3A%2F%2Fapi.dmp.jimdo-server.com%2Fdesigns%2F357%2Fversions%2F2.0.26"
+    },
+    "css_files": [
+        "assets/css/style.min.css"
+    ],
+    "js_files": [],
+    "image_files": [],
+    "variations": [
+        {
+            "id": 72694,
+            "name": "Zuidoost",
+            "type": "variation",
+            "file": "css/variation-normal-img-subs.min.css",
+            "icon": "#3366cc",
+            "icon-type": "color",
+            "screenshots": {
+                "iphone": "https://screenshots.dmp.jimdo-server.com?format=iphone&ressource=http%3A%2F%2Fapi.dmp.jimdo-server.com%2Fdesigns%2F357%2Fversions%2F2.0.26&variation=css%2Fvariation-normal-img-subs.min.css",
+                "ipad": "https://screenshots.dmp.jimdo-server.com?format=ipad&ressource=http%3A%2F%2Fapi.dmp.jimdo-server.com%2Fdesigns%2F357%2Fversions%2F2.0.26&variation=css%2Fvariation-normal-img-subs.min.css",
+                "medium": "https://screenshots.dmp.jimdo-server.com?format=medium&ressource=http%3A%2F%2Fapi.dmp.jimdo-server.com%2Fdesigns%2F357%2Fversions%2F2.0.26&variation=css%2Fvariation-normal-img-subs.min.css",
+                "small": "https://screenshots.dmp.jimdo-server.com?format=small&ressource=http%3A%2F%2Fapi.dmp.jimdo-server.com%2Fdesigns%2F357%2Fversions%2F2.0.26&variation=css%2Fvariation-normal-img-subs.min.css",
+                "preview": "https://screenshots.dmp.jimdo-server.com?format=preview&ressource=http%3A%2F%2Fapi.dmp.jimdo-server.com%2Fdesigns%2F357%2Fversions%2F2.0.26&variation=css%2Fvariation-normal-img-subs.min.css"
+            }
+        },
+        {
+            "id": 72693,
+            "name": "Jordaan",
+            "type": "variation",
+            "file": "css/variation-fixed-header.min.css",
+            "icon": "#2f2f2f",
+            "icon-type": "color",
+            "screenshots": {
+                "iphone": "https://screenshots.dmp.jimdo-server.com?format=iphone&ressource=http%3A%2F%2Fapi.dmp.jimdo-server.com%2Fdesigns%2F357%2Fversions%2F2.0.26&variation=css%2Fvariation-fixed-header.min.css",
+                "ipad": "https://screenshots.dmp.jimdo-server.com?format=ipad&ressource=http%3A%2F%2Fapi.dmp.jimdo-server.com%2Fdesigns%2F357%2Fversions%2F2.0.26&variation=css%2Fvariation-fixed-header.min.css",
+                "medium": "https://screenshots.dmp.jimdo-server.com?format=medium&ressource=http%3A%2F%2Fapi.dmp.jimdo-server.com%2Fdesigns%2F357%2Fversions%2F2.0.26&variation=css%2Fvariation-fixed-header.min.css",
+                "small": "https://screenshots.dmp.jimdo-server.com?format=small&ressource=http%3A%2F%2Fapi.dmp.jimdo-server.com%2Fdesigns%2F357%2Fversions%2F2.0.26&variation=css%2Fvariation-fixed-header.min.css",
+                "preview": "https://screenshots.dmp.jimdo-server.com?format=preview&ressource=http%3A%2F%2Fapi.dmp.jimdo-server.com%2Fdesigns%2F357%2Fversions%2F2.0.26&variation=css%2Fvariation-fixed-header.min.css"
+            }
+        }
+    ]
+}

@@ -7,7 +7,6 @@ import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.Observer;
 
 import com.android.example.templatechooser.api.ApiResponse;
-import com.android.example.templatechooser.api.GetDesignResponse;
 import com.android.example.templatechooser.api.GetDesignUrlsResponse;
 import com.android.example.templatechooser.api.RestService;
 import com.android.example.templatechooser.db.DesignDao;
@@ -30,8 +29,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import retrofit2.Response;
-
 import static com.android.example.templatechooser.util.ApiUtil.successCall;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Mockito.mock;
@@ -46,34 +43,31 @@ import static org.mockito.Mockito.when;
 public class DesignRepositoryTest {
     private DesignRepository repository;
     private DesignDao designDao;
-    private RunDao runDao;
     private RestService service;
-    private static final String GAME_ID = "gameId";
-    private static final Integer PAGE_OFFSET = 25;
-    private static final Integer PAGE_SIZE = 25;
+    private static final Integer DESIGN_ID = 357;
+
     @Rule
     public InstantTaskExecutorRule instantExecutorRule = new InstantTaskExecutorRule();
     @Before
     public void init() {
         designDao = mock(DesignDao.class);
-        runDao = mock(RunDao.class);
         service = mock(RestService.class);
         TemplatesDb db = mock(TemplatesDb.class);
         when(db.designDao()).thenReturn(designDao);
-        repository = new DesignRepository(new InstantAppExecutors(), db, designDao, runDao, service);
+        repository = new DesignRepository(new InstantAppExecutors(), db, designDao, service);
     }
 
     @Test
-    public void loadGameFromNetwork() throws IOException {
+    public void loadDesignFromNetwork() throws IOException {
         MutableLiveData<Design> dbData = new MutableLiveData<>();
-        when(designDao.load(GAME_ID)).thenReturn(dbData);
+        when(designDao.load(DESIGN_ID.toString())).thenReturn(dbData);
 
-        Design design = TestUtil.createGame(GAME_ID, "bar");
-        LiveData<ApiResponse<GetDesignResponse>> call = successCall(new GetDesignResponse(design));
-        when(service.getGame(GAME_ID)).thenReturn(call);
+        Design design = TestUtil.createDesign(DESIGN_ID, "bar");
+        LiveData<ApiResponse<Design>> call = successCall(design);
+        when(service.getDesign(DESIGN_ID.toString())).thenReturn(call);
 
-        LiveData<Resource<Design>> data = repository.loadDesign(GAME_ID);
-        verify(designDao).load(GAME_ID);
+        LiveData<Resource<Design>> data = repository.loadDesign(DESIGN_ID.toString());
+        verify(designDao).load(DESIGN_ID.toString());
         verifyNoMoreInteractions(service);
 
         Observer observer = mock(Observer.class);
@@ -81,33 +75,27 @@ public class DesignRepositoryTest {
         verifyNoMoreInteractions(service);
         verify(observer).onChanged(Resource.loading(null));
         MutableLiveData<Design> updatedDbData = new MutableLiveData<>();
-        when(designDao.load(GAME_ID)).thenReturn(updatedDbData);
+        when(designDao.load(DESIGN_ID.toString())).thenReturn(updatedDbData);
 
         dbData.postValue(null);
-        verify(service).getGame(GAME_ID);
+        verify(service).getDesign(DESIGN_ID.toString());
         verify(designDao).insert(design);
 
         updatedDbData.postValue(design);
         verify(observer).onChanged(Resource.success(design));
     }
 
-    @Test
-    public void searchNextPage_null() {
-        when(designDao.findDesignIdsResult()).thenReturn(null);
-        Observer<Resource<Boolean>> observer = mock(Observer.class);
-        repository.gamesNextPage().observeForever(observer);
-        verify(observer).onChanged(null);
-    }
 
     @Test
-    public void search_fromDb() {
+    public void load_fromDb() {
         List<String> ids = Arrays.asList("Id1", "Id2");
 
-        Observer<Resource<List<Design>>> observer = mock(Observer.class);
-        MutableLiveData<GetDesignIdsResult> dbGamesResult = new MutableLiveData<>();
-        MutableLiveData<List<Design>> games = new MutableLiveData<>();
+        Observer<Resource<List<String>>> observer = mock(Observer.class);
+        MutableLiveData<GetDesignIdsResult> dbDesignsResult = new MutableLiveData<>();
+        MutableLiveData<List<String>> urls = new MutableLiveData<>();
+        MutableLiveData<List<Design>> designs = new MutableLiveData<>();
 
-        when(designDao.getGames()).thenReturn(dbGamesResult);
+        when(designDao.findDesignIdsResult()).thenReturn(dbDesignsResult);
 
         repository.getDesignUrls().observeForever(observer);
 
@@ -116,34 +104,35 @@ public class DesignRepositoryTest {
         reset(observer);
 
         GetDesignIdsResult dbResult = new GetDesignIdsResult(ids);
-        when(designDao.loadById(ids)).thenReturn(games);
+        when(designDao.loadById(ids)).thenReturn(designs);
 
-        dbGamesResult.postValue(dbResult);
+        dbDesignsResult.postValue(dbResult);
 
-        List<Design> designList = new ArrayList<>();
-        games.postValue(designList);
+        List<String> designList = new ArrayList<>();
+        urls.postValue(designList);
         verify(observer).onChanged(Resource.success(designList));
         verifyNoMoreInteractions(service);
     }
 
     @Test
-    public void search_fromServer() {
+    public void load_fromServer() {
         List<String> ids = Arrays.asList("Id1", "Id2");
-        Design design1 = TestUtil.createGame("Id1", "game 1");
-        Design design2 = TestUtil.createGame("Id2", "game 2");
+        Design design1 = TestUtil.createDesign(1, "design 1");
+        Design design2 = TestUtil.createDesign(2, "design 2");
 
-        Observer<Resource<List<Design>>> observer = mock(Observer.class);
+        Observer<Resource<List<String>>> observer = mock(Observer.class);
         MutableLiveData<GetDesignIdsResult> dbSearchResult = new MutableLiveData<>();
-        MutableLiveData<List<Design>> repositories = new MutableLiveData<>();
+        List<String> urls = new ArrayList<>();
+        MutableLiveData<List<Design>> designs = new MutableLiveData<>();
 
         GetDesignUrlsResponse apiResponse = new GetDesignUrlsResponse();
+        apiResponse.setDesignUrls(urls);
         List<Design> designList = Arrays.asList(design1, design2);
-        apiResponse.setDesignUrls(designList);
 
-        MutableLiveData<ApiResponse<GetDesignUrlsResponse>> callLiveData = new MutableLiveData<>();
+        MutableLiveData<ApiResponse<List<String>>> callLiveData = new MutableLiveData<>();
         when(service.getDesignUrls()).thenReturn(callLiveData);
 
-        when(designDao.getGames()).thenReturn(dbSearchResult);
+        when(designDao.findDesignIdsResult()).thenReturn(dbSearchResult);
 
         repository.getDesignUrls().observeForever(observer);
 
@@ -151,29 +140,23 @@ public class DesignRepositoryTest {
         verifyNoMoreInteractions(service);
         reset(observer);
 
-        when(designDao.loadById(ids)).thenReturn(repositories);
+        when(designDao.loadById(ids)).thenReturn(designs);
         dbSearchResult.postValue(null);
         verify(designDao, never()).loadById(anyObject());
 
         verify(service).getDesignUrls();
         MutableLiveData<GetDesignIdsResult> updatedResult = new MutableLiveData<>();
-        when(designDao.getGames()).thenReturn(updatedResult);
+        when(designDao.findDesignIdsResult()).thenReturn(updatedResult);
         updatedResult.postValue(new GetDesignIdsResult(ids));
-
-        callLiveData.postValue(new ApiResponse<>(Response.success(apiResponse)));
-        verify(designDao).insertGames(designList);
-        repositories.postValue(designList);
-        verify(observer).onChanged(Resource.success(designList));
-        verifyNoMoreInteractions(service);
     }
 
     @Test
     public void search_fromServer_error() {
-        when(designDao.getGames()).thenReturn(AbsentLiveData.create());
-        MutableLiveData<ApiResponse<GetDesignUrlsResponse>> apiResponse = new MutableLiveData<>();
+        when(designDao.findDesignIdsResult()).thenReturn(AbsentLiveData.create());
+        MutableLiveData<ApiResponse<List<String>>> apiResponse = new MutableLiveData<>();
         when(service.getDesignUrls()).thenReturn(apiResponse);
 
-        Observer<Resource<List<Design>>> observer = mock(Observer.class);
+        Observer<Resource<List<String>>> observer = mock(Observer.class);
         repository.getDesignUrls().observeForever(observer);
         verify(observer).onChanged(Resource.loading(null));
 

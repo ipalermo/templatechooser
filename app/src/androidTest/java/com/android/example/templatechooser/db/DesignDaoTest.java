@@ -1,7 +1,5 @@
 package com.android.example.templatechooser.db;
 
-import android.arch.lifecycle.LiveData;
-import android.database.sqlite.SQLiteException;
 import android.support.test.runner.AndroidJUnit4;
 
 import com.android.example.templatechooser.util.TestUtil;
@@ -19,71 +17,41 @@ import static org.hamcrest.MatcherAssert.assertThat;
 public class DesignDaoTest extends DbTest {
     @Test
     public void insertAndRead() throws InterruptedException {
-        Design design = TestUtil.createGame("id", "bar");
+        Design design = TestUtil.createDesign(1, "bar");
         db.designDao().insert(design);
-        Design loaded = getValue(db.designDao().load("id"));
+        Design loaded = getValue(db.designDao().load("1"));
         assertThat(loaded, notNullValue());
-        assertThat(loaded.id, is("id"));
-        assertThat(loaded.names, notNullValue());
-        assertThat(loaded.names.international, is("bar"));
+        assertThat(loaded.id, is("1"));
+        assertThat(loaded.name, notNullValue());
+        assertThat(loaded.name, is("bar"));
     }
 
-    @Test
-    public void insertRunWithoutGame() {
-        Run run = TestUtil.createRun("runId", "playerId", "uri", "gameId");
-        try {
-            db.runDao().insert(run);
-            throw new AssertionError("must fail because game does not exist");
-        } catch (SQLiteException ex) {
-        }
-    }
 
     @Test
-    public void insertRun() throws InterruptedException {
-        Design design = TestUtil.createGame("gameId", "name");
-        Run r1 = TestUtil.createRun("runId1", "playerId", "uri", "gameId");
+    public void insertDesign() throws InterruptedException {
+        Design design = TestUtil.createDesign(1, "name");
         db.beginTransaction();
         try {
             db.designDao().insert(design);
-            db.runDao().insert(r1);
             db.setTransactionSuccessful();
         } finally {
             db.endTransaction();
         }
-        Run run = getValue(db.runDao().findRunForGame("gameId"));
-        assertThat(run, notNullValue());
-        assertThat(run.id, is("runId1"));
-        assertThat(run.players.get(0).id, is("playerId"));
-        assertThat(run.videos.links.get(0).uri, is("uri"));
-        assertThat(run.gameId, is("gameId"));
+        assertThat(design, notNullValue());
+        assertThat(design.id, is(1));
+        assertThat(design.name, is("name"));
     }
 
     @Test
     public void createIfNotExists_exists() throws InterruptedException {
-        Design design = TestUtil.createGame("Id2", "name");
+        Design design = TestUtil.createDesign(1, "name");
         db.designDao().insert(design);
-        assertThat(db.designDao().createGameIfNotExists(design), is(-1L));
+        assertThat(db.designDao().createDesignIfNotExists(design), is(-1L));
     }
 
     @Test
     public void createIfNotExists_doesNotExist() {
-        Design design = TestUtil.createGame("Id2", "name");
-        assertThat(db.designDao().createGameIfNotExists(design), is(1L));
-    }
-
-    @Test
-    public void insertRunThenUpdateGame() throws InterruptedException {
-        Design design = TestUtil.createGame("gameId", "name");
-        db.designDao().insert(design);
-        Run run = TestUtil.createRun("runId", "playerId", "videoUri", "gameId");
-        db.runDao().insert(run);
-        LiveData<Run> data = db.runDao().findRunForGame("gameId");
-        assertThat(getValue(data), notNullValue());
-
-        Design update = TestUtil.createGame("gameId", "name");
-        db.designDao().insert(update);
-        data = db.runDao().findRunForGame("gameId");
-        assertThat(getValue(data).id, is("runId"));
-        assertThat(getValue(data).gameId, is("gameId"));
+        Design design = TestUtil.createDesign(2, "name");
+        assertThat(db.designDao().createDesignIfNotExists(design), is(1L));
     }
 }
