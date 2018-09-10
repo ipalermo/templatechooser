@@ -1,4 +1,4 @@
-# Add game specific ProGuard rules here.
+# Add design specific ProGuard rules here.
 # By default, the flags in this file are appended to flags specified
 # in /Users/yboyar/android/sdk/tools/proguard/proguard-android.txt
 # You can edit the include path and order by changing the proguardFiles
@@ -7,9 +7,9 @@
 # For more details, see
 #   http://developer.android.com/guide/developing/tools/proguard.html
 
-# Add any game specific keep options here:
+# Add any design specific keep options here:
 
-# If your game uses WebView with JS, uncomment the following
+# If your design uses WebView with JS, uncomment the following
 # and specify the fully qualified class name to the JavaScript interface
 # class:
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {

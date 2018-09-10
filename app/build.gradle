@@ -5,13 +5,13 @@ android {
     compileSdkVersion build_versions.target_sdk
     buildToolsVersion build_versions.build_tools
     defaultConfig {
-        applicationId "com.android.example.teamwork"
+        applicationId "com.android.example.templatechooser"
         minSdkVersion build_versions.min_sdk
         targetSdkVersion build_versions.target_sdk
         vectorDrawables.useSupportLibrary = true
         versionCode 1
         versionName "1.0"
-        testInstrumentationRunner "com.android.example.teamwork.util.GithubTestRunner"
+        testInstrumentationRunner "com.android.example.templatechooser.util.CustomTestRunner"
     }
     buildTypes {
         debug {
@@ -54,6 +54,8 @@ dependencies {
     implementation deps.retrofit.runtime
     implementation deps.retrofit.gson
     implementation deps.glide
+    implementation deps.rxjava2
+    implementation deps.rx_android
 
     implementation deps.dagger.runtime
     implementation deps.dagger.android

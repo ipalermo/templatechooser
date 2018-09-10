@@ -1,10 +1,10 @@
 
 
 <resources>
-    <string name="app_name">Speedruns</string>
-    <string name="navigation_drawer_header_title" translatable="false">Speedruns</string>
+    <string name="app_name">Templates</string>
+    <string name="navigation_drawer_header_title" translatable="false">Templates</string>
 
-    <string name="items_list_fragment_title">Games</string>
+    <string name="items_list_fragment_title">Design Templates</string>
     <string name="details_fragment_title">""</string>
     <string name="about_fragment_title">"About"</string>
     <string name="help_menu_option">"Help"</string>
@@ -14,8 +14,8 @@
 
     <string name="a11y_user_photo">user photo</string>
     <string name="a11y_user_name">user name</string>
-    <string name="list_item_image_descr">game image</string>
+    <string name="list_item_image_descr">design image</string>
     <string name="navigation_drawer_header_content_description">Navigation drawer header logo</string>
 
-    <string name="empty_projects_result">No games found</string>
+    <string name="empty_projects_result">No designUrls found</string>
 </resources>

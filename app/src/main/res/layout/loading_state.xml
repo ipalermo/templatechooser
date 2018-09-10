@@ -4,10 +4,10 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto">
     <data>
-        <import type="com.android.example.speedrun.vo.Resource"/>
-        <import type="com.android.example.speedrun.vo.Status"/>
+        <import type="com.android.example.templatechooser.vo.Resource"/>
+        <import type="com.android.example.templatechooser.vo.Status"/>
         <variable name="resource" type="Resource"/>
-        <variable name="callback" type="com.android.example.speedrun.ui.common.RetryCallback"/>
+        <variable name="callback" type="com.android.example.templatechooser.ui.common.RetryCallback"/>
     </data>
     <LinearLayout android:orientation="vertical"
                   app:visibleGone="@{resource.data == null}"
